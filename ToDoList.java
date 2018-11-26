@@ -1,4 +1,4 @@
-//package manage;
+package manage;
 
 import java.util.Scanner;
 import java.util.Vector;
@@ -45,19 +45,32 @@ class ToDoList{
 						break;}
 					}
 				}
-			else if(todoList_menu==4)
-				delete(todoList_menu);
+			else if(todoList_menu==4) {
+				int deleteNum;
+				view();
+				while(true) {
+					System.out.print("delete할 번호>>");
+					deleteNum=sc.nextInt();
+					if(deleteNum>=todoList.size()) {
+						System.out.println("입력하신 번호는 존재하지 않습니다.");
+					}
+					else {
+						delete(deleteNum);
+						break;
+					}
+				}
+			}
 			else if(todoList_menu==5)
 				break;
 		}
 	}
 	public void create() {
 		sc=new Scanner(System.in);
-		System.out.print("date: ");
+		System.out.print("date:");
 		date=sc.nextLine();
-		System.out.print("due: ");
+		System.out.print("due:");
 		due=sc.nextLine();
-		System.out.print("contents: ");
+		System.out.print("contents:");
 		contents=sc.nextLine();
 		todoList.add(new ToDoList(date,due,contents));
 	}
@@ -75,7 +88,7 @@ class ToDoList{
 		int updateNum=index;
 		int updateMenu;
 		int check;
-		sc=new Scanner(System.in);
+		
 
 		System.out.print("["+updateNum+"]:");
 		System.out.print(" date: "+todoList.elementAt(updateNum).date);
@@ -107,32 +120,21 @@ class ToDoList{
 				System.out.println("할 일이 수정되었습니다.");
 	}
 	public void delete(int index) {
-		int deleteNum;
+		int deleteNum=index;
 		int deleteMenu;
 		int check;
-		sc=new Scanner(System.in);
-		view();
-		while(true) {
-			System.out.print("delete할 번호>>");
-			deleteNum=sc.nextInt();
-			if(deleteNum>=todoList.size()) {
-				System.out.println("입력하신 번호는 존재하지 않습니다.");
-				}
-			else {
-				System.out.print("["+deleteNum+"]:");
-				System.out.print(" date: "+todoList.elementAt(deleteNum).date);
-				System.out.print(" due: "+todoList.elementAt(deleteNum).due);
-				System.out.println(" description: "+todoList.elementAt(deleteNum).contents);
-				System.out.println("할 일을 삭제하시겠습니까?");
-				System.out.print("1.yes\\2.no>>");
-				check=sc.nextInt();
-				if(check==2)
-					break;
-				todoList.removeElementAt(deleteNum);
-				System.out.println("할 일이 삭제되었습니다.");
-				break;
-				}			
-		}
+		System.out.print("["+deleteNum+"]:");
+		System.out.print(" date: "+todoList.elementAt(deleteNum).date);
+		System.out.print(" due: "+todoList.elementAt(deleteNum).due);
+		System.out.println(" description: "+todoList.elementAt(deleteNum).contents);
+		System.out.println("할 일을 삭제하시겠습니까?");
+		System.out.print("1.yes\\2.no>>");
+		check=sc.nextInt();
+		if(check==2)
+			return;
+		todoList.removeElementAt(deleteNum);
+		System.out.println("할 일이 삭제되었습니다.");
+				
 	}
 
 }
