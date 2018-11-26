@@ -106,7 +106,7 @@ class Contacts implements Functions {
 		   System.out.print("1.name / 2.phone number / 3.e-mail 중 어느 부분을 수정할 지 선택하세요>>");
 		   answer=sc.nextInt();
 		   System.out.print("수정한 내용을 입력>>");
-		   replaceContact=sc.next();	//이 부분이 정상작동하지 않음
+		   replaceContact=sc.next();
 		   
 		   switch(answer) {
 		   	   case 1 : {
