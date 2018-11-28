@@ -37,7 +37,7 @@ class ToDoList{
 				while(true) {
 					System.out.print("update할 번호>>");
 					updateNum=sc.nextInt();
-					if(updateNum>=todoList.size()) {
+					if(updateNum>todoList.size() || updateNum<=0) {
 						System.out.println("입력하신 번호는 존재하지 않습니다.");
 						}
 					else {
@@ -51,7 +51,7 @@ class ToDoList{
 				while(true) {
 					System.out.print("delete할 번호>>");
 					deleteNum=sc.nextInt();
-					if(deleteNum>=todoList.size()) {
+					if(deleteNum>todoList.size() || deleteNum<=0) {
 						System.out.println("입력하신 번호는 존재하지 않습니다.");
 					}
 					else {
@@ -70,14 +70,14 @@ class ToDoList{
 		date=sc.nextLine();
 		System.out.print("due:");
 		due=sc.nextLine();
-		System.out.print("contents:");
+		System.out.print("description:");
 		contents=sc.nextLine();
 		todoList.add(new ToDoList(date,due,contents));
 	}
 	public void view() {
 		System.out.println("------------------------------------------------------------------------------");
 		for(int i=0;i<todoList.size();i++) {
-			System.out.print("["+i+"]:");
+			System.out.print("["+(i+1)+"]:");
 			System.out.print(" date: "+todoList.elementAt(i).date);
 			System.out.print(" due: "+todoList.elementAt(i).due);
 			System.out.println(" contents: "+todoList.elementAt(i).contents);
@@ -85,12 +85,12 @@ class ToDoList{
 		System.out.println("------------------------------------------------------------------------------");
 	}
 	public void update(int index) {
-		int updateNum=index;
+		int updateNum=index-1;
 		int updateMenu;
 		int check;
 		
 
-		System.out.print("["+updateNum+"]:");
+		System.out.print("["+index+"]:");
 		System.out.print(" date: "+todoList.elementAt(updateNum).date);
 		System.out.print(" due: "+todoList.elementAt(updateNum).due);
 		System.out.println(" description: "+todoList.elementAt(updateNum).contents);
@@ -120,10 +120,9 @@ class ToDoList{
 				System.out.println("할 일이 수정되었습니다.");
 	}
 	public void delete(int index) {
-		int deleteNum=index;
-		int deleteMenu;
+		int deleteNum=index-1;
 		int check;
-		System.out.print("["+deleteNum+"]:");
+		System.out.print("["+index+"]:");
 		System.out.print(" date: "+todoList.elementAt(deleteNum).date);
 		System.out.print(" due: "+todoList.elementAt(deleteNum).due);
 		System.out.println(" description: "+todoList.elementAt(deleteNum).contents);
