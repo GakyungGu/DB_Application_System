@@ -1,5 +1,5 @@
 package manage;
-//41, 109번째 줄 실행되지 않음!!
+
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -33,12 +33,48 @@ class Contacts implements Functions {
             create();
          else if(contacts_menu==2)
             view();
-         else if(contacts_menu==3)
-            update();
-         else if(contacts_menu==4)
-            delete();
+         else if(contacts_menu==3) {
+        	 int updateNum;
+        	 if(contacts.size()<1) {
+      		   System.out.println("update할 연락처가 없습니다.");
+      		   continue;
+        	 }
+        	 else {
+        		 view();
+        		 while (true) {
+        			   System.out.print("인덱스 입력>>");
+        			   updateNum=sc.nextInt();
+        			   
+        			   if((updateNum-1)>=0 && (updateNum-1)<contacts.size()) {
+        				   update(updateNum);
+        				   break;
+        			   }
+        			   else
+        				   System.out.println("해당 index를 가진 연락처가 존재하지 않습니다");
+        		 }
+        	 }
+         }
+         else if(contacts_menu==4) {
+        	 int deleteNum;
+        	 if(contacts.size()<1) {
+      		   System.out.println("delete할 연락처가 없습니다.");
+      		   continue;
+      	   	 }
+      	   
+      	   	while (true) {
+      		   System.out.print("인덱스 입력>>");
+      		   deleteNum=sc.nextInt();
+      			   
+      		   if((deleteNum-1)>=0 && (deleteNum-1)<contacts.size()) {
+      			   delete(deleteNum);
+      			   break;
+      		   }
+      		   else
+      			   System.out.println("해당 index를 가진 연락처가 존재하지 않습니다");
+      	   }
+         }
          else if(contacts_menu==5)
-            break;	//본메뉴로 돌아가야되는데 아예 종료됨
+            break;
       }
    }
    
@@ -67,34 +103,10 @@ class Contacts implements Functions {
    }
    
    @Override
-   public void update() {
+   public void update(int index) {
 	   int answer;
-	   int index;
 	   String replaceContact;
 	   sc=new Scanner(System.in);
-	   
-	   if(contacts.size()<1) {
-		   System.out.println("update할 연락처가 없습니다.");
-		   return;
-	   }
-	   
-	   System.out.println("--------------------저장된 연락처 목록--------------------");
-	   for(index = 1; index <= contacts.size(); index++) {
-		   System.out.println("["+index+"]: name: "+contacts.get(index-1).name+" "
-		   		+ "phone number: "+contacts.get(index-1).phone_number+" "
-		   		+ "email: "+contacts.get(index-1).email);
-	   }
-	   System.out.println("---------------------------------------------------");
-	   
-	   while (true) {
-		   System.out.print("인덱스 입력>>");
-		   index=sc.nextInt();
-		   
-		   if((index-1)>=0 && (index-1)<contacts.size())
-			   break;
-		   else
-			   System.out.println("해당 index를 가진 연락처가 존재하지 않습니다");
-	   }
 	   
 	   System.out.println("["+index+"]: name: "+contacts.get(index-1).name+" "
 		   		+ "phone number: "+contacts.get(index-1).phone_number+" "
@@ -140,33 +152,9 @@ class Contacts implements Functions {
    
    
    @Override
-   public void delete() {
+   public void delete(int index) {
 	   int answer;
-	   int index;
 	   sc=new Scanner(System.in);
-	   
-	   if(contacts.size()<1) {
-		   System.out.println("delete할 연락처가 없습니다.");
-		   return;
-	   }
-	   
-	   System.out.println("--------------------저장된 연락처 목록--------------------");
-	   for(index = 1; index <= contacts.size(); index++) {
-		   System.out.println("["+index+"]: name: "+contacts.get(index-1).name+" "
-		   		+ "phone number: "+contacts.get(index-1).phone_number+" "
-		   		+ "email: "+contacts.get(index-1).email);
-	   }
-	   System.out.println("---------------------------------------------------");
-	   
-	   while (true) {
-		   System.out.print("인덱스 입력>>");
-		   index=sc.nextInt();
-			   
-		   if((index-1)>=0 && (index-1)<contacts.size())
-			   break;
-		   else
-			   System.out.println("해당 index를 가진 연락처가 존재하지 않습니다");
-	   }
 		   
 	   System.out.println("["+index+"]: name: "+contacts.get(index-1).name+" "
 		   		+ "phone number: "+contacts.get(index-1).phone_number+" "
