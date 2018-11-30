@@ -1,3 +1,4 @@
+package manage;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -29,8 +30,11 @@ public class ManagingSystem {
                 new ToDoList(todoList);
             else if(menu==3)
                 new Appointment(appointment);
-            else if(menu==4)
-                break;
+            else if(menu==4) {
+                System.out.println("프로그램이 종료됩니다.");
+            	break;
+            }
         }
     }
+}
 

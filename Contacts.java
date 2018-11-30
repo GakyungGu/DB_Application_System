@@ -60,18 +60,21 @@ class Contacts implements Functions {
       		   System.out.println("delete할 연락처가 없습니다.");
       		   continue;
       	   	 }
-      	   
-      	   	while (true) {
-      		   System.out.print("인덱스 입력>>");
-      		   deleteNum=sc.nextInt();
-      			   
-      		   if((deleteNum-1)>=0 && (deleteNum-1)<contacts.size()) {
-      			   delete(deleteNum);
-      			   break;
-      		   }
-      		   else
-      			   System.out.println("해당 index를 가진 연락처가 존재하지 않습니다");
-      	   }
+        	 
+        	 else {
+        		 view();
+        		 while (true) {
+            		   System.out.print("인덱스 입력>>");
+            		   deleteNum=sc.nextInt();
+            			   
+            		   if((deleteNum-1)>=0 && (deleteNum-1)<contacts.size()) {
+            			   delete(deleteNum);
+            			   break;
+            		   }
+            		   else
+            			   System.out.println("해당 index를 가진 연락처가 존재하지 않습니다");
+            	   } 
+        	 }
          }
          else if(contacts_menu==5)
             break;
