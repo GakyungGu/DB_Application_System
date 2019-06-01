@@ -68,35 +68,15 @@
 		String t_max = request.getParameter("courseMax");
 		String c_room = new String(request.getParameter("courseRoom").getBytes("ISO-8859-1"),"UTF-8");		
 		String c_room_no = request.getParameter("courseRoomNo");
+		String c_credit = request.getParameter("courseUnit");
 		String c_id = null;
-		String c_no = null;
+		String c_no = request.getParameter("courseNo");
 		String myDay = "";
 		String myRoom = "";
 		String t_hour;
 		int t_year = 0;
 		int t_sem = 0;
-		for (int i = 0; i < c_day.length; i++) {
-			switch(c_day[i]) {
-			case "mon":
-				myDay += '1';
-				break;
-			case "tue":
-				myDay += '2';
-				break;
-			case "wed":
-				myDay += '3';
-				break;
-			case "thu":
-				myDay += '4';
-				break;
-			case "fri":
-				myDay += '5';
-				break;
-			}
-		}
-		System.out.println(myDay);
-		myRoom += c_room + " " + c_room_no;
-		System.out.println(c_room + " | " + c_room_no + " | " + myRoom);
+		
 		if (c_name == null || c_name.equals("")) {
 			%>
 			<script>
@@ -112,6 +92,26 @@
 				location.href="insert.jsp";
 			</script>
 			<% 
+		}else {
+			for (int i = 0; i < c_day.length; i++) {
+				switch(c_day[i]) {
+				case "mon":
+					myDay += '1';
+					break;
+				case "tue":
+					myDay += '2';
+					break;
+				case "wed":
+					myDay += '3';
+					break;
+				case "thu":
+					myDay += '4';
+					break;
+				case "fri":
+					myDay += '5';
+					break;
+				}
+			}
 		}
 		if (sHour == null || sMinute == null || eHour == null || eMinute == null || sHour.equals("") || sMinute.equals("") || eHour.equals("") || eMinute.equals("")) {
 			%>
@@ -129,6 +129,9 @@
 			</script>
 			<% 
 		}
+		else {
+			myRoom += c_room + " " + c_room_no;
+		}
 		if (t_max == null) {
 			%>
 			<script>
@@ -137,17 +140,42 @@
 			</script>
 			<% 
 		}
-//		String year_sql = "{? = call DateToEnrollYear(SYSDATE)}";
-//		pSQL = "insert into teach values ('" + c_id + "', " + c_no + ", " + t_year + ", " + t_sem + ", " + p_id + ", " + t_hour + ", " + t_day + ", " + t_max + ", " + t_room + ")";
+		String result = "";
 		try {
-			cstmt = myConn.prepareCall("{? = call DateToEnrollYear(SYSDATE)}");
-			cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
-			
-//			System.out.println(t_year + " / " + t_sem);
+			cstmt = myConn.prepareCall("{call InsertCourse(?,?,?,?,?,?,?,?,?,?,?,?)}");
+			cstmt.setString(1, c_name);
+			cstmt.setString(2, c_no);
+			cstmt.setString(3, c_credit);
+			cstmt.setString(4, p_id);
+			cstmt.setInt(5, Integer.parseInt(sHour));
+			cstmt.setInt(6, Integer.parseInt(sMinute));
+			cstmt.setInt(7, Integer.parseInt(eHour));
+			cstmt.setInt(8, Integer.parseInt(eMinute));
+			cstmt.setString(9, myDay);
+			cstmt.setString(10, t_max);
+			cstmt.setString(11, myRoom);
+			cstmt.registerOutParameter(12, java.sql.Types.VARCHAR);
+			isSucceed = cstmt.execute();
+			result = cstmt.getString(12);			
 		}catch(SQLException e){
 			e.printStackTrace();
 		}finally {
-			
+			if (isSucceed) {
+				%>
+				<script>
+					alert("추가되었습니다.");
+					location.href="insert.jsp";
+				</script>		
+				<%
+			}
+			else {
+			%>
+			<script>
+				alert("<%=result%>");
+				location.href="insert.jsp";
+			</script>		
+			<%
+			}
 		}
 	}
 %>

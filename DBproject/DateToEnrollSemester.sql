@@ -13,5 +13,3 @@ CREATE OR REPLACE FUNCTION DateToEnrollSemester(dDate IN DATE)
 		RETURN v_sem;
 	END;
 /
-
-//@ C:\Users\kkuy6\Desktop\InsertEnroll.sql;

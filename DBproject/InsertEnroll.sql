@@ -1,4 +1,4 @@
-CREATE OR REPLACE PROCEDURE InsertEnroll (
+ï»¿CREATE OR REPLACE PROCEDURE InsertEnroll (
   sStudentId IN VARCHAR2,
   sCourseId IN VARCHAR2,
   nCourseIdNo IN NUMBER,
@@ -14,7 +14,12 @@ IS
   nCourseUnit NUMBER;
   nCnt NUMBER;
   nTeachMax NUMBER;
-  overlap NUMBER;
+  insertHour NUMBER;
+  insertDay NUMBER;
+  teachHour NUMBER;
+  teachDay NUMBER;
+  conflict_time_checker NUMBER;
+  conflict_day_checker NUMBER;
   CURSOR duplicate_time_cursor IS
     SELECT *
     FROM enroll
@@ -23,7 +28,7 @@ BEGIN
   result := '';
 
 DBMS_OUTPUT.put_line('#');
-DBMS_OUTPUT.put_line(sStudentId || '´ÔÀÌ °ú¸ñ¹øÈ£ ' || sCourseId || ', ºĞ¹İ ' || TO_CHAR(nCourseIdNo) || 'ÀÇ ¼ö°­ µî·ÏÀ» ¿äÃ»ÇÏ¿´½À´Ï´Ù.');
+DBMS_OUTPUT.put_line(sStudentId || 'ë‹˜ì´ ê³¼ëª©ë²ˆí˜¸ ' || sCourseId || ', ë¶„ë°˜ ' || TO_CHAR(nCourseIdNo) || 'ì˜ ìˆ˜ê°• ë“±ë¡ì„ ìš”ì²­í•˜ì˜€ìŠµë‹ˆë‹¤.');
 
   nYear := DateToEnrollYear(SYSDATE);
   nSemester := DateToEnrollSemester(SYSDATE);
@@ -66,24 +71,48 @@ DBMS_OUTPUT.put_line(sStudentId || '´ÔÀÌ °ú¸ñ¹øÈ£ ' || sCourseId || ', ºĞ¹İ ' ||
      RAISE too_many_students;
   END IF;
 
+  SELECT t.t_hour, t.t_day
+  into insertHour, insertDay
+  from teach t, course c
+  where t.c_id = c.c_id and t.c_no = c.c_no and c.c_id = sCourseId and c.c_no = nCourseIdNo;
+
+  teachHour := 0; teachDay := 0;
+
+  FOR enroll_list IN duplicate_time_cursor LOOP
+    select t.t_hour, t.t_day
+    into teachHour, teachDay
+    from teach t
+    where t.c_id = enroll_list.c_id and t.c_no = enroll_list.c_no;
+
+    conflict_time_checker := compareHour(teachHour, insertHour);
+    conflict_day_checker := compareDay(teachDay, insertDay);
+
+    EXIT WHEN conflict_time_checker > 0 and conflict_day_checker > 0;
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE(conflict_time_checker || '/' || conflict_day_checker);
+  
+  IF (conflict_time_checker > 0 and conflict_day_checker > 0) THEN
+  RAISE duplicate_time;
+  END IF;
+
   INSERT INTO enroll(s_id,c_id,c_no,e_year,e_sem) VALUES (sStudentId, sCourseId, nCourseIdNo, nYear, nSemester);
 
   COMMIT;
-  result := '¼ö°­½ÅÃ» µî·ÏÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù.';
+  result := 'ìˆ˜ê°•ì‹ ì²­ ë“±ë¡ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.';
 
-EXCEPTION
-  WHEN too_many_sumCourseUnit THEN
-    result := 'ÃÖ´ëÇĞÁ¡À» ÃÊ°úÇÏ¿´½À´Ï´Ù';
-  WHEN too_many_courses THEN
-    result := 'ÀÌ¹Ì µî·ÏµÇ¾îÀÖ´Â °ú¸ñÀÔ´Ï´Ù.';
-  WHEN too_many_students THEN
-    result := '¼ö°­½ÅÃ» ÀÎ¿øÀÌ ÃÊ°úµÇ¾î µî·ÏÀÌ ºÒ°¡´ÉÇÕ´Ï´Ù';
-  WHEN duplicate_time THEN
-    result := 'ÀÌ¹Ì µî·ÏµÈ °ú¸ñ Áß Áßº¹µÇ´Â ½Ã°£ÀÌ Á¸ÀçÇÕ´Ï´Ù';
-  WHEN no_data_found THEN
-    result := 'ÀÌ¹ø ÇĞ±â °ú¸ñÀÌ ¾Æ´Õ´Ï´Ù.';
-  WHEN OTHERS THEN
-    ROLLBACK;
-    result := SQLCODE;
+  EXCEPTION
+    WHEN too_many_sumCourseUnit THEN
+      result := 'ìµœëŒ€í•™ì ì„ ì´ˆê³¼í•˜ì˜€ìŠµë‹ˆë‹¤';
+    WHEN too_many_courses THEN
+      result := 'ì´ë¯¸ ë“±ë¡ë˜ì–´ìˆëŠ” ê³¼ëª©ì…ë‹ˆë‹¤.';
+    WHEN too_many_students THEN
+      result := 'ìˆ˜ê°•ì‹ ì²­ ì¸ì›ì´ ì´ˆê³¼ë˜ì–´ ë“±ë¡ì´ ë¶ˆê°€ëŠ¥í•©ë‹ˆë‹¤';
+    WHEN duplicate_time THEN
+      result := 'ì´ë¯¸ ë“±ë¡ëœ ê³¼ëª©ê³¼ ì‹œê°„ì´ ì¤‘ë³µë©ë‹ˆë‹¤.';
+    WHEN no_data_found THEN
+      result := 'ì´ë²ˆ í•™ê¸° ê³¼ëª©ì´ ì•„ë‹™ë‹ˆë‹¤.';
+    WHEN OTHERS THEN
+      ROLLBACK;
+      result := SQLCODE;
 END;
 /

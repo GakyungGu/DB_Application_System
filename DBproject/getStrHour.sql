@@ -1,0 +1,26 @@
+create or replace function getStrHour(
+  teachHour IN NUMBER)
+  RETURN VARCHAR2
+  IS
+    startTime NUMBER;
+    endTime NUMBER;
+    strStart VARCHAR2(4);
+    strEnd VARCHAR2(4);
+    strHour VARCHAR2(30);
+  BEGIN
+    strHour := '';
+    makeTime(teachHour, startTime, endTime);
+    strStart := TO_CHAR(startTime);
+    strEnd := TO_CHAR(endTime);
+    IF (LENGTH(strStart) = 3) THEN
+      strStart := '0' || strStart;
+    ELSIF (LENGTH(strEnd) = 3) THEN
+      strEnd := '0' || strEnd;
+    END IF;
+    strHour := SUBSTR(strStart, 1, 2) || ':';
+    strHour := strHour || SUBSTR(strStart, 3, 2) || '~';
+    strHour := strHour || SUBSTR(strEnd, 1, 2) || ':';
+    strHour := strHour || SUBSTR(strEnd, 3, 2);
+    RETURN strHour;
+  END;
+  /

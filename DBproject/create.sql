@@ -6,7 +6,8 @@ e_semi number(1),
 s_id number(10), 
 constraints enroll_pk primary key(c_id, e_year, e_semi, s_id),
 constraints enroll_fk1 foreign key(s_id) references students(s_id),
-constraints enroll_fk2 foreign key(c_id, c_no, e_year, e_semi) references teach(c_id, c_no, t_year, t_sem)
+constraints enroll_fk2 foreign key(c_id, c_no, e_year, e_semi) references teach(c_id, c_no, t_year, t_sem) on delete cascade
+constraints enroll_fk3 foreign key(c_id, c_no) references course(c_id, c_no) on delete cascade;
 );
 
 create table teach (
@@ -21,7 +22,7 @@ T_max NUMBER(3),
 T_room VARCHAR(20),
 constraints teach_pk primary key(c_id, c_no, t_year, t_sem),
 constraints teach_fk foreign key(p_id) references professor(p_id),
-constraints teack_fk2 foreign key(c_id, c_no) references course(c_id, c_no)
+constraints teack_fk2 foreign key(c_id, c_no) references course(c_id, c_no) on delete cascade
 );
 
 create table course(

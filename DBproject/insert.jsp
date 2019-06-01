@@ -27,6 +27,8 @@
 	String mySQL = null;
 	Connection myConn = null;
 	Statement stmt = null;
+	PreparedStatement pstmt = null;
+	CallableStatement cstmt = null, cstmt2 = null;
 	ResultSet myResultSet = null;
 %>
 </head>
@@ -35,54 +37,86 @@
 <pre><%out.println(); out.println(); %></pre>
 <pre><%out.println(); out.println(); %></pre>
 <% if (stu_mode) { %>
-<table id = "courseTable" width="75%" align="center" border>
-<form method="post">
-<tr>
-<td><div align="center">과목 id</div></td>
-<td><div align="center">학점</div></td>
-<td><div align="center">학기</div></td>
-<td><div align="center">과목 이름</div></td>
-<td><div align="center">요일 및 시간</div></td>
-<td><div align="center">담당 교수</div></td>
-<td><div align="center">강의실</div></td>
-<td><div align="center">신청</div></td>
-</tr>
+	<table id = "courseTable" width="100%" align="center" border>
+	<form method="post">
+	<tr>
+	<td><div align="center">과목 id</div></td>
+	<td><div align="center">학점</div></td>
+	<td><div align="center">학기</div></td>
+	<td><div align="center">과목 이름</div></td>
+	<td><div align="center">요일 및 시간</div></td>
+	<td><div align="center">담당 교수</div></td>
+	<td><div align="center">강의실</div></td>
+	<td><div align="center">정원</div></td>
+	<td><div align="center">현재 인원</div></td>
+	<td><div align="center">신청</div></td>
+	</tr>
 <%	if (session_id != null){
+		String t_max = null;
+		int currentNumber = 0;
+		ResultSet pResultSet = null;
 		try {
 			Class.forName(dbdriver);
 			myConn = DriverManager.getConnection(dburl, user, passwd);
 			stmt = myConn.createStatement();
 			mySQL = "select * from teach t, professor p, course c where p.p_id=t.p_id and t.c_id=c.c_id and t.c_no=c.c_no";
 			myResultSet = stmt.executeQuery(mySQL);
+			cstmt = myConn.prepareCall("{? = call getStrDay(?)}");
+			cstmt2 = myConn.prepareCall("{? = call getStrHour(?)}");
+			pstmt = myConn.prepareStatement("select count(*) from enroll where c_id=? and c_no=? and e_year=? and e_sem=?");
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
-			ResultSet pResultSet = null;
 			while(myResultSet.next()) {
 				courseID = myResultSet.getString("c_id");
 				courseNo = myResultSet.getString("c_no");
 				courseName = myResultSet.getString("c_name");
 				courseCredit = myResultSet.getString("c_credit");
 				profName = myResultSet.getString("p_name");
+				t_day = myResultSet.getString("t_day");
 				t_year = myResultSet.getString("t_year");
 				t_sem = myResultSet.getString("t_sem");
 				p_id = myResultSet.getString("p_id");
-				t_day = myResultSet.getString("t_day");
 				t_hour = myResultSet.getString("t_hour");
 				t_room = myResultSet.getString("t_room");
+				t_max = myResultSet.getString("t_max");
+				try {
+					cstmt.setInt(2, Integer.parseInt(t_day));
+					cstmt.registerOutParameter(1, java.sql.Types.VARCHAR);
+					cstmt.execute();
+					cstmt2.setInt(2, Integer.parseInt(t_hour));
+					cstmt2.registerOutParameter(1, java.sql.Types.VARCHAR);
+					cstmt2.execute();
+					t_day = cstmt.getString(1); 
+					t_hour = cstmt2.getString(1);
+					pstmt.setString(1, courseID);
+					pstmt.setString(2, courseNo);
+					pstmt.setString(3, t_year);
+					pstmt.setString(4, t_sem);
+					pResultSet = pstmt.executeQuery();
+				}catch(SQLException e2) {
+					e2.printStackTrace();
+				}
 				out.println("<tr>");
 				out.println("<td><div align=\"center\">" + courseID + "</div></td>");
 				out.println("<td><div align=\"center\">" + courseCredit + "</div></td>");
 				out.println("<td><div align=\"center\">" + t_year + "-" + t_sem + "</div></td>");
 				out.println("<td><div align=\"center\">" + courseName + " 0" + courseNo +"</div></td>");				
-				out.println("<td><div align=\"center\">" + t_day + "/" + t_hour + "</div></td>");
+				out.println("<td><div align=\"center\">" + t_day + " " + t_hour + "</div></td>");
 				out.println("<td><div align=\"center\">" + profName + "</div></td>");
 				out.println("<td><div align=\"center\">" + t_room + "</div></td>");
+				out.println("<td><div align=\"center\">" + t_max + "</div></td>");
+				if (pResultSet.next()) {
+					currentNumber = pResultSet.getInt(1);
+					out.println("<td><div align=\"center\">" + currentNumber + "</div></td>");
+				}
 %>				<td><div align="center"><a href="insert_verify.jsp?mode=<%=stu_mode%>&id=<%=session_id%>&c_id=<%=courseID%>&c_no=<%=courseNo%>&e_year=<%=t_year%>&e_sem=<%=t_sem%>">신청</a></div></td>
 				</tr>
 <%
 			}	
 			stmt.close();
+			cstmt.close();
+			pstmt.close();
 			myConn.close();
 		}
 	}
@@ -104,6 +138,7 @@
 	<form method="post" action="insert_verify.jsp?mode=<%=stu_mode%>&id=<%=session_id%>">
 	<tr>
 	<td><div align="center">과목 이름</div></td>
+	<td><div align="center">분반</div></td>
 	<td><div align="center">요일</div></td>
 	<td><div align="center">시간</div></td>
 	<td><div align="center">장소</div></td>
@@ -113,6 +148,7 @@
 	</tr>
 	<tr>
 	<td><div align="center"><input type="text" name="courseName"></div></td>
+	<td><div align="center"><input type="text" style="width:20px" name="courseNo"></div></td>
 	<td><div align="center">
 	<input type="checkbox" name="courseDay" value="mon">월
 	<input type="checkbox" name="courseDay" value="tue">화
