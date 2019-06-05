@@ -4,6 +4,23 @@
 <html>
 <head> <meta charset="UTF-8">
 <title>데이터베이스를 활용한 수강신청 시스템입니다.</title>
+<link href="https://fonts.googleapis.com/css?family=Jua&display=swap" rel="stylesheet">	
+<style type="text/css">
+	body{
+		font-family: 'Jua', sans-serif;
+	}
+	.insert {
+		border-radius: 10px;
+		border: 1px solid #000000;
+		bgcolor: #cdcdcd;	
+	}
+	table {
+		border-collapse:collapse;
+	}
+	td {
+		border: 1px solid #cdcdcd;
+	}
+</style>
 </head>
 <body>
 <%@include file="top.jsp"%>

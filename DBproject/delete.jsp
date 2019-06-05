@@ -18,9 +18,10 @@ CallableStatement cstmt2 = null;
 </head>
 <body>
 <%@include file="top.jsp" %>
+<pre><%out.println();%></pre>
 <%	ResultSet myResultSet = null;
-//	PreparedStatement pstmt = null;
 	CallableStatement cstmt = null;
+	System.out.println(stu_mode);
 	if(session_id == null) {
 		%>
 		<script>
@@ -38,6 +39,7 @@ CallableStatement cstmt2 = null;
 		String t_year = null;
 		String t_sem = null;
 		String t_day = null;
+		String t_shour = null, t_ehour = null;
 		String t_hour = null;
 		String t_room = null;
 		try {
@@ -52,7 +54,7 @@ CallableStatement cstmt2 = null;
 			<table width="75%" align="center" bgcolor="#FFFFFF" border>
 			<tr>
 			<td><div align="center">과목 id</div></td>
-			<td><div align="center">과목 번호</div></td>
+			<td><div align="center">분반</div></td>
 			<td><div align="center">학기</div></td>
 			<td><div align="center">과목 이름</div></td>
 			<td><div align="center">요일 및 시간</div></td>
@@ -65,7 +67,7 @@ CallableStatement cstmt2 = null;
 				mySQL = "select * from professor p, teach t, course c where p.p_id = t.p_id and t.c_id = c.c_id and t.c_no = c.c_no and (t.c_id, t.c_no, t.t_year, t.t_sem) in (select c_id, c_no, e_year, e_sem from enroll where s_id ="+session_id+")";
 				myResultSet = stmt.executeQuery(mySQL);
 				cstmt = myConn.prepareCall("{? = call getStrDay(?)}");				
-				cstmt2 = myConn.prepareCall("{? = call getStrHour(?)}");
+				cstmt2 = myConn.prepareCall("{? = call getStrHour(?,?)}");
 			}catch(SQLException e) {
 				e.printStackTrace();
 			}finally {
@@ -78,14 +80,16 @@ CallableStatement cstmt2 = null;
 					t_sem = myResultSet.getString("t_sem");
 					p_id = myResultSet.getString("p_id");
 					t_day = myResultSet.getString("t_day");
-					t_hour = myResultSet.getString("t_hour");
+					t_shour = myResultSet.getString("t_shour");
+					t_ehour = myResultSet.getString("t_ehour");
 					t_room = myResultSet.getString("t_room");
 					try {
 						cstmt.setInt(2, Integer.parseInt(t_day));
 						cstmt.registerOutParameter(1, java.sql.Types.VARCHAR);
 						cstmt.execute();
 						t_day = cstmt.getString(1);
-						cstmt2.setInt(2, Integer.parseInt(t_hour));
+						cstmt2.setInt(2, Integer.parseInt(t_shour));
+						cstmt2.setInt(3, Integer.parseInt(t_ehour));
 						cstmt2.registerOutParameter(1, java.sql.Types.VARCHAR);
 						cstmt2.execute();
 						t_hour = cstmt2.getString(1);
@@ -127,32 +131,38 @@ CallableStatement cstmt2 = null;
 			</tr>			
 			<%
 			try {
-				mySQL = "select * from teach t, course c where t.p_id=" + session_id + " and t.c_id=c.c_id and t.c_no=c.c_no";
+				mySQL = "select * from teach t, course c where t.c_id=c.c_id and t.c_no=c.c_no and t.p_id='" + session_id + "'";
 				myResultSet = stmt.executeQuery(mySQL);
 				cstmt = myConn.prepareCall("{? = call getStrDay(?)}");
-				cstmt2 = myConn.prepareCall("{? = call getStrHour(?)}");
+				cstmt2 = myConn.prepareCall("{? = call getStrHour(?,?)}");
 			}catch (SQLException ex1) {
 				ex1.printStackTrace();
+				System.out.println("error 1");
 			}finally {
 				while(myResultSet.next()) {
 					courseID = myResultSet.getString("c_id");
+					System.out.println(courseID);
 					courseNo = myResultSet.getString("c_no");
 					courseName = myResultSet.getString("c_name");
 					t_year = myResultSet.getString("t_year");
 					t_sem = myResultSet.getString("t_sem");
 					t_day = myResultSet.getString("t_day");
-					t_hour = myResultSet.getString("t_hour");
+					t_shour = myResultSet.getString("t_shour");
+					t_ehour = myResultSet.getString("t_ehour");
 					t_room = myResultSet.getString("t_room");
 					t_max = myResultSet.getString("t_max");
+					System.out.println(courseID + courseNo + courseName);
 					try {
 						cstmt.setInt(2, Integer.parseInt(t_day));
 						cstmt.registerOutParameter(1, java.sql.Types.VARCHAR);
 						cstmt.execute();
 						t_day = cstmt.getString(1);
-						cstmt2.setInt(2, Integer.parseInt(t_hour));
+						cstmt2.setInt(2, Integer.parseInt(t_shour));
+						cstmt2.setInt(3, Integer.parseInt(t_ehour));
 						cstmt2.registerOutParameter(1, java.sql.Types.VARCHAR);
 						cstmt2.execute();
 						t_hour = cstmt2.getString(1);
+						System.out.println(t_hour);
 					}catch(SQLException e2) {
 						e2.printStackTrace();
 					}

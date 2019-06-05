@@ -20,7 +20,8 @@ IS
   nCnt NUMBER;
   nCourseId course.c_id%TYPE;
   myHour VARCHAR2(20);
-  teachHour teach.t_hour%TYPE;
+  teach_sHour teach.t_shour%TYPE;
+  teach_eHour teach.t_ehour%TYPE;
   teachDay teach.t_day%TYPE;
 /*  teachTime NUMBER;
   insertTime NUMBER;*/
@@ -41,12 +42,13 @@ BEGIN
   nYear := DateToEnrollYear(SYSDATE);
   nSemester := DateToEnrollSemester(SYSDATE);
   teachDay := getNumberTeachDay(courseDay);
-  teachHour := getNumberHour(startHour, startMinute, endHour, endMinute);
+  teach_sHour := startHour * 100 + startMinute;
+  teach_eHour := endHour * 100 + endMinute;
 
   select COUNT(*)
   into nCnt
   from teach t, course c
-  where t.t_day = teachDay and t.t_hour = teachHour and c.c_name = courseName and c.c_no = courseNo and t.t_year = nYear and t.t_sem = nSemester and t.p_id = professorID;
+  where t.t_day = teachDay and t.t_shour = teach_sHour and t.t_ehour = teach_eHour and c.c_name = courseName and c.c_no = courseNo and t.t_year = nYear and t.t_sem = nSemester and t.p_id = professorID;
 
   IF (nCnt > 0) THEN
   RAISE duplicate_course;
@@ -56,7 +58,7 @@ BEGIN
   conflict_day_checker := 0;
   
   FOR teach_list IN time_cursor LOOP
-    conflict_time_checker := compareHour(teachHour, teach_list.t_hour);
+    conflict_time_checker := compareHour(teach_sHour,  teach_eHour, teach_list.t_shour, teach_list.t_ehour);
     conflict_day_checker := compareDay(teachDay, teach_list.t_day);
     EXIT WHEN (conflict_time_checker > 0 and conflict_day_checker > 0);
   END LOOP;
@@ -70,7 +72,7 @@ BEGIN
   conflict_day_checker := 0;
   
   FOR teach_list IN room_cursor LOOP
-    conflict_time_checker := compareHour(teachHour, teach_list.t_hour);
+    conflict_time_checker := compareHour(teach_sHour, teach_eHour, teach_list.t_shour, teach_list.t_ehour);
     conflict_day_checker := compareDay(teachDay, teach_list.t_day);
     EXIT WHEN (conflict_time_checker > 0 and conflict_day_checker > 0);
   END LOOP;
@@ -83,8 +85,8 @@ BEGIN
   nCourseId := createCourseId();
 
   INSERT INTO course(c_id, c_no, c_name, c_credit) VALUES(nCourseId, courseNo, courseName, courseCredit);
-  INSERT INTO teach(c_id, c_no, t_year, t_sem, p_id, t_hour, t_day, t_room, t_max)
-  VALUES(nCourseId, courseNo, nYear, nSemester, professorID, teachHour, teachDay, courseRoom, courseMax);
+  INSERT INTO teach(c_id, c_no, t_year, t_sem, p_id, t_shour, t_ehour, t_day, t_room, t_max)
+  VALUES(nCourseId, courseNo, nYear, nSemester, professorID, teach_sHour, teach_eHour, teachDay, courseRoom, courseMax);
 
   COMMIT;
   result := '강좌가 개설되었습니다.';

@@ -1,13 +1,27 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+    <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="java.sql.*" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>수강신청</title>
-<style>
-	table {width="75%"}
-	
+<link href="https://fonts.googleapis.com/css?family=Jua&display=swap" rel="stylesheet">	
+<style type="text/css">
+	body{
+		font-family: 'Jua', sans-serif;
+	}
+	.insert {
+		border-radius: 10px;
+		border: 1px solid #000000;
+		bgcolor: #cdcdcd;	
+	}
+	table {
+		border-collapse:collapse;
+		margin-top: 10px;
+	}
+	td {
+		border: 1px solid #cdcdcd;
+	}
 </style>
 <%	String courseID = null;
 	String courseNo = null;
@@ -19,7 +33,10 @@
 	String t_sem = null;
 	String t_day = null;
 	String t_hour = null;
+	String t_shour = null;
+	String t_ehour = null;
 	String t_room = null;
+	String t_max = null;
 	String dbdriver = "oracle.jdbc.driver.OracleDriver";
 	String dburl = "jdbc:oracle:thin:@localhost:1521:orcl";
 	String user = "db1616612";
@@ -34,8 +51,22 @@
 </head>
 <body>
 <%@include file="top.jsp" %>
-<pre><%out.println(); out.println(); %></pre>
-<pre><%out.println(); out.println(); %></pre>
+	<table class="insert" width="50%" align="center">
+	<form method="post" action="search.jsp">
+	<tr>
+	<td><div align="center">
+	<select name="searchMenu" style="width:80px">
+	<option value=1>강좌 이름</option>
+	<option value=2>교수</option>
+	<option value=3>과목 id</option>
+	<option value=4>학기</option>
+	</select>
+	</div></td>
+	<td><div align="center"><input type="text" name="searchText"></div></td>
+	<td><div align="center"><input type="submit" name="submit" value="검색"></div></td>
+	</tr>
+	</form>
+	</table>
 <% if (stu_mode) { %>
 	<table id = "courseTable" width="100%" align="center" border>
 	<form method="post">
@@ -52,7 +83,6 @@
 	<td><div align="center">신청</div></td>
 	</tr>
 <%	if (session_id != null){
-		String t_max = null;
 		int currentNumber = 0;
 		ResultSet pResultSet = null;
 		try {
@@ -62,7 +92,7 @@
 			mySQL = "select * from teach t, professor p, course c where p.p_id=t.p_id and t.c_id=c.c_id and t.c_no=c.c_no";
 			myResultSet = stmt.executeQuery(mySQL);
 			cstmt = myConn.prepareCall("{? = call getStrDay(?)}");
-			cstmt2 = myConn.prepareCall("{? = call getStrHour(?)}");
+			cstmt2 = myConn.prepareCall("{? = call getStrHour(?,?)}");
 			pstmt = myConn.prepareStatement("select count(*) from enroll where c_id=? and c_no=? and e_year=? and e_sem=?");
 		}catch (SQLException e) {
 			e.printStackTrace();
@@ -77,14 +107,16 @@
 				t_year = myResultSet.getString("t_year");
 				t_sem = myResultSet.getString("t_sem");
 				p_id = myResultSet.getString("p_id");
-				t_hour = myResultSet.getString("t_hour");
+				t_shour = myResultSet.getString("t_shour");
+				t_ehour = myResultSet.getString("t_ehour");
 				t_room = myResultSet.getString("t_room");
 				t_max = myResultSet.getString("t_max");
 				try {
 					cstmt.setInt(2, Integer.parseInt(t_day));
 					cstmt.registerOutParameter(1, java.sql.Types.VARCHAR);
 					cstmt.execute();
-					cstmt2.setInt(2, Integer.parseInt(t_hour));
+					cstmt2.setInt(2, Integer.parseInt(t_shour));
+					cstmt2.setInt(3, Integer.parseInt(t_ehour));
 					cstmt2.registerOutParameter(1, java.sql.Types.VARCHAR);
 					cstmt2.execute();
 					t_day = cstmt.getString(1); 
@@ -133,7 +165,77 @@
 </table><%
 }else { /*professor mode*/
 	if (session_id != null) {
-	%>
+		ResultSet pResultSet = null;
+		%>
+		<table id = "courseTable" width="100%" align="center" border>
+		<tr>
+		<td><div align="center">과목 id</div></td>
+		<td><div align="center">학점</div></td>
+		<td><div align="center">학기</div></td>
+		<td><div align="center">과목 이름</div></td>
+		<td><div align="center">요일 및 시간</div></td>
+		<td><div align="center">담당 교수</div></td>
+		<td><div align="center">강의실</div></td>
+		<td><div align="center">정원</div></td>
+		</tr>
+		<%
+		try {
+			Class.forName(dbdriver);
+			myConn = DriverManager.getConnection(dburl, user, passwd);
+			stmt = myConn.createStatement();
+			mySQL = "select * from teach t, professor p, course c where p.p_id=t.p_id and t.c_id=c.c_id and t.c_no=c.c_no";
+			myResultSet = stmt.executeQuery(mySQL);
+			cstmt = myConn.prepareCall("{? = call getStrDay(?)}");
+			cstmt2 = myConn.prepareCall("{? = call getStrHour(?,?)}");
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			while(myResultSet.next()) {
+				courseID = myResultSet.getString("c_id");
+				courseNo = myResultSet.getString("c_no");
+				courseName = myResultSet.getString("c_name");
+				courseCredit = myResultSet.getString("c_credit");
+				profName = myResultSet.getString("p_name");
+				t_day = myResultSet.getString("t_day");
+				t_year = myResultSet.getString("t_year");
+				t_sem = myResultSet.getString("t_sem");
+				p_id = myResultSet.getString("p_id");
+				t_shour = myResultSet.getString("t_shour");
+				t_ehour = myResultSet.getString("t_ehour");
+				t_room = myResultSet.getString("t_room");
+				t_max = myResultSet.getString("t_max");
+				try {
+					cstmt.setInt(2, Integer.parseInt(t_day));
+					cstmt.registerOutParameter(1, java.sql.Types.VARCHAR);
+					cstmt.execute();
+					cstmt2.setInt(2, Integer.parseInt(t_shour));
+					cstmt2.setInt(3, Integer.parseInt(t_ehour));
+					cstmt2.registerOutParameter(1, java.sql.Types.VARCHAR);
+					cstmt2.execute();
+					t_day = cstmt.getString(1); 
+					t_hour = cstmt2.getString(1);
+				}catch(SQLException e2) {
+					e2.printStackTrace();
+				}
+				out.println("<tr>");
+				out.println("<td><div align=\"center\">" + courseID + "</div></td>");
+				out.println("<td><div align=\"center\">" + courseCredit + "</div></td>");
+				out.println("<td><div align=\"center\">" + t_year + "-" + t_sem + "</div></td>");
+				out.println("<td><div align=\"center\">" + courseName + " 0" + courseNo +"</div></td>");				
+				out.println("<td><div align=\"center\">" + t_day + " " + t_hour + "</div></td>");
+				out.println("<td><div align=\"center\">" + profName + "</div></td>");
+				out.println("<td><div align=\"center\">" + t_room + "</div></td>");
+				out.println("<td><div align=\"center\">" + t_max + "</div></td>");
+%>				
+				</tr>
+<%
+			}	
+			stmt.close();
+			cstmt.close();
+			myConn.close();
+		}
+	%>	
+	</table>
 	<table id=newCourseTable align="center" bgcolor="#FFFFFF" border>
 	<form method="post" action="insert_verify.jsp?mode=<%=stu_mode%>&id=<%=session_id%>">
 	<tr>

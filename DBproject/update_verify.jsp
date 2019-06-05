@@ -10,6 +10,7 @@ Connection myConn = null;
 Statement stmt = null;
 ResultSet myResultSet = null;
 String updateID=request.getParameter("id");
+String myMode=request.getParameter("mode");
 String updatePW=request.getParameter("updatePW");
 String updatePW_conf=request.getParameter("updatePW_conf");
 String updateAddr=request.getParameter("updateAddr");
@@ -17,11 +18,16 @@ String errorMessage=null;
 
 if (updatePW.equals(updatePW_conf)) {
 	try{
-	Class.forName(dbdriver);
-	myConn = DriverManager.getConnection(dburl, user, passwd);
-	stmt = myConn.createStatement();
-	mySQL = "update students set s_pw='" + updatePW + "' , s_addr='" + updateAddr + "' where s_id='" + updateID +"'";
-	stmt.execute(mySQL);
+		Class.forName(dbdriver);
+		myConn = DriverManager.getConnection(dburl, user, passwd);
+		stmt = myConn.createStatement();
+		if(myMode.equals("true")){
+			mySQL = "update students set s_pw='" + updatePW + "' , s_email='" + updateAddr + "' where s_id='" + updateID +"'";
+		}
+		else {
+			mySQL = "update professor set p_pw='" + updatePW + "' , p_email='" + updateAddr + "' where p_id='" + updateID + "'";
+		}
+		stmt.execute(mySQL);
 	}catch(SQLException e){
 		if (e.getErrorCode() == 20001)
 			errorMessage = "이전과 같은 비밀번호를 설정할 수 없습니다.";
@@ -41,7 +47,7 @@ if (updatePW.equals(updatePW_conf)) {
 		<%
 	}
 	finally {
-		if (errorMessage.isEmpty()){
+		if (errorMessage == null){
 		%>
 		<script>
 			alert("update가 성공적으로 완료되었습니다!");

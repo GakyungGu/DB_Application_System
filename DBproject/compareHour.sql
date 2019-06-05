@@ -1,28 +1,19 @@
-create or replace function compareHour(
- teachHour IN NUMBER,
- insertHour IN NUMBER)
+﻿﻿create or replace function compareHour(
+ teach_sHour IN NUMBER,
+ teach_eHour IN NUMBER,
+ insert_sHour IN NUMBER,
+ insert_eHour IN NUMBER)
  RETURN NUMBER
 IS
- startTime NUMBER;
- endTime NUMBER;
- insertStartTime NUMBER;
- insertEndTime NUMBER;
  conflict_checker NUMBER;
 BEGIN
  conflict_checker := 0;
- startTime := 0;
- endTime := 0;
- insertStartTime := 0;
- insertEndTime := 0;
 
- makeTime(teachHour, startTime, endTime);
- makeTime(insertHour, insertStartTime, insertEndTime);
-
-IF (insertStartTime >= startTime and insertStartTime <= endTime) THEN
+IF (insert_sHour >= teach_sHour and insert_sHour <= teach_eHour) THEN
   conflict_checker := conflict_checker + 1;
-ELSIF (insertEndTime >= startTime and insertEndTime <= endTime) THEN
+ELSIF (insert_eHour >= teach_sHour and insert_eHour <= teach_eHour) THEN
  conflict_checker := conflict_checker + 1;
-ELSIF (insertStartTime <= startTime and insertEndTime >= endTime) THEN
+ELSIF (insert_sHour <= teach_sHour and insert_eHour >= teach_eHour) THEN
  conflict_checker := conflict_checker + 1;
 END IF;
 

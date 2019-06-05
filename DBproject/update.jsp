@@ -8,7 +8,8 @@
 </head>
 <body>
 <%@ include file="top.jsp" %>
-<%
+<pre><% out.println(); %></pre>
+<%	
 	String dbdriver = "oracle.jdbc.driver.OracleDriver";
 	String dburl = "jdbc:oracle:thin:@localhost:1521:orcl";
 	String user = "db1616612";
@@ -19,7 +20,7 @@
 	ResultSet myResultSet = null;
 	String userAddr = "";
 	String userPassword= "";
-
+//	String column_name="";
 	if (session_id == null) {
 %>		<script>
 			alert("로그인이 필요합니다.");
@@ -30,15 +31,24 @@
 		try {
 			myConn = DriverManager.getConnection(dburl, user, passwd);
 			stmt = myConn.createStatement();
-			mySQL = "select * from students where s_id='" + session_id +"'";
+			if (stu_mode)
+				mySQL = "select * from students where s_id='" + session_id +"'";
+			else
+				mySQL = "select * from professor where p_id='" + session_id + "'";
 			myResultSet = stmt.executeQuery(mySQL);
 		}catch(SQLException e){
 			out.println(e);
 			e.printStackTrace();
 		}finally{
 			if (myResultSet.next()) {
-				userPassword = myResultSet.getString("s_pw");
-				userAddr = myResultSet.getString("s_addr");
+				if (stu_mode){
+					userPassword = myResultSet.getString("s_pw");
+					userAddr = myResultSet.getString("s_email");
+				}
+				else {
+					userPassword = myResultSet.getString("p_pw");
+					userAddr = myResultSet.getString("p_email");
+				}
 			}
 			else {
 %>
@@ -51,8 +61,8 @@
 		}
 	}
 %>
-	<form method="post" action="update_verify.jsp?id=<%=session_id%>">
-	<table width="75%" align="center" bgcolor="FFFF99" border>
+	<form method="post" action="update_verify.jsp?mode=<%=stu_mode%>&id=<%=session_id%>">
+	<table width="75%" align="center" bgcolor="FFFFFF" border>
 	<tr>
 	<td><div align="center">아이디</div></td>
 	<td><div align="center">
@@ -72,7 +82,7 @@
 	</div></td>
 	</tr>
 	<tr>
-	<td><div align="center">주소</div></td>
+	<td><div align="center">E-mail</div></td>
 	<td><div align="center">
 	<input type="text" name="updateAddr" value=<%=userAddr%>>
 	</div></td>

@@ -14,6 +14,7 @@
 	String userID = request.getParameter("id");
 	String userMode = request.getParameter("mode");
 	boolean isSucceed = false;
+	System.out.println(userMode);
 	try {
 		Class.forName(dbdriver);
 		myConn = DriverManager.getConnection(dburl, user, passwd);
@@ -27,8 +28,7 @@
 		String c_no = request.getParameter("c_no");
 		String result = " ";
 		try {
-			cstmt = myConn.prepareCall("{call InsertEnroll(?, ?, ?, ?)}");
-			
+			cstmt = myConn.prepareCall("{call InsertEnroll(?, ?, ?, ?)}");			
 			PreparedStatement pstmt = myConn.prepareStatement("call InsertEnroll(?, ?, ?, ?)");
 			cstmt.setString(1, s_id);
 			cstmt.setString(2, c_id);
@@ -59,7 +59,7 @@
 	}
 	else { /*professor mode*/
 		String p_id = request.getParameter("id");
-		String c_name = request.getParameter("courseName");
+		String c_name = new String(request.getParameter("courseName").getBytes("ISO-8859-1"),"UTF-8");
 		String[] c_day = request.getParameterValues("courseDay");
 		String sHour = request.getParameter("startHour");
 		String sMinute = request.getParameter("startMinute");
@@ -96,19 +96,19 @@
 			for (int i = 0; i < c_day.length; i++) {
 				switch(c_day[i]) {
 				case "mon":
-					myDay += '1';
+					myDay += '0';
 					break;
 				case "tue":
-					myDay += '2';
+					myDay += '1';
 					break;
 				case "wed":
-					myDay += '3';
+					myDay += '2';
 					break;
 				case "thu":
-					myDay += '4';
+					myDay += '3';
 					break;
 				case "fri":
-					myDay += '5';
+					myDay += '4';
 					break;
 				}
 			}
@@ -157,6 +157,7 @@
 			cstmt.registerOutParameter(12, java.sql.Types.VARCHAR);
 			isSucceed = cstmt.execute();
 			result = cstmt.getString(12);			
+			System.out.println(result);
 		}catch(SQLException e){
 			e.printStackTrace();
 		}finally {

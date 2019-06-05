@@ -9,18 +9,21 @@ if (session_id == null)
 	log = "<a href=login.jsp>로그인</a>";
 else 
 	log = "<a href=logout.jsp>로그아웃</a>"; 
-if (session_mode == null) 
+if (session_mode == null)
 	stu_mode = false;
 if (stu_mode) {
 	menu = "수강신청";
 }
+else {
+	menu = "수업과목";
+}
 %>
-<table width="75%" align="center" bgcolor="#FFFF99" border>
+<table width="75%" align="center" bgcolor="#D1D2D3" border>
 <tr>
 <td align="center"><b><%=log%></b></td>
-<td align="center"><b><a href="update.jsp">사용자 정보 수정</b></td>
-<td align="center"><b><a href="insert.jsp"><%=menu%> 입력</b></td>
-<td align="center"><b><a href="delete.jsp"><%=menu%> 삭제</b></td>
-<td align="center"><b><a href="select.jsp"><%=menu%> 조회</b></td>
+<td align="center"><b><a href="update.jsp">사용자 정보 수정</a></b></td>
+<td align="center"><b><a href="insert.jsp"><%=menu%> 입력</a></b></td>
+<td align="center"><b><a href="delete.jsp"><%=menu%> 삭제</a></b></td>
+<td align="center"><b><a href="select.jsp"><%=menu%> 조회</a></b></td>
 </tr>
 </table>

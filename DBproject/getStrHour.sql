@@ -1,15 +1,13 @@
 create or replace function getStrHour(
-  teachHour IN NUMBER)
+  startTime IN NUMBER,
+  endTime IN NUMBER)
   RETURN VARCHAR2
   IS
-    startTime NUMBER;
-    endTime NUMBER;
     strStart VARCHAR2(4);
     strEnd VARCHAR2(4);
     strHour VARCHAR2(30);
   BEGIN
     strHour := '';
-    makeTime(teachHour, startTime, endTime);
     strStart := TO_CHAR(startTime);
     strEnd := TO_CHAR(endTime);
     IF (LENGTH(strStart) = 3) THEN

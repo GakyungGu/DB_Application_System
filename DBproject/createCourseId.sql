@@ -7,13 +7,13 @@ create or replace function createCourseId
     CURSOR last_teach_cursor IS
     select *
     from teach
-    order by c_id
+    order by c_id;
   BEGIN
     for teach_list in last_teach_cursor loop
       courseId := teach_list.c_id;
     end loop;
 
-    select substr(courseId, 2, 4)
+    select substr(courseId, 2, 3)
     into courseId
     from dual;
 
@@ -21,6 +21,6 @@ create or replace function createCourseId
     temp := temp + 1;
 
     courseId := 'C' || TO_CHAR(temp);
-    dbms_output.put_line(courseId);
+    RETURN courseId;
   end;
   /

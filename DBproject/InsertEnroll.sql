@@ -14,9 +14,11 @@ IS
   nCourseUnit NUMBER;
   nCnt NUMBER;
   nTeachMax NUMBER;
-  insertHour NUMBER;
+  insert_sHour NUMBER;
+  insert_eHour NUMBER;
   insertDay NUMBER;
-  teachHour NUMBER;
+  teach_sHour NUMBER;
+  teach_eHour NUMBER;
   teachDay NUMBER;
   conflict_time_checker NUMBER;
   conflict_day_checker NUMBER;
@@ -71,20 +73,20 @@ DBMS_OUTPUT.put_line(sStudentId || '님이 과목번호 ' || sCourseId || ', 분
      RAISE too_many_students;
   END IF;
 
-  SELECT t.t_hour, t.t_day
-  into insertHour, insertDay
+  SELECT t.t_shour, t.t_ehour, t.t_day
+  into insert_sHour, insert_eHour, insertDay
   from teach t, course c
   where t.c_id = c.c_id and t.c_no = c.c_no and c.c_id = sCourseId and c.c_no = nCourseIdNo;
 
-  teachHour := 0; teachDay := 0;
+  teach_sHour := 0;  teach_eHour := 0; teachDay := 0;
 
   FOR enroll_list IN duplicate_time_cursor LOOP
-    select t.t_hour, t.t_day
-    into teachHour, teachDay
+    select t.t_shour, t.t_ehour, t.t_day
+    into teach_sHour, teach_eHour, teachDay
     from teach t
     where t.c_id = enroll_list.c_id and t.c_no = enroll_list.c_no;
 
-    conflict_time_checker := compareHour(teachHour, insertHour);
+    conflict_time_checker := compareHour(teach_sHour, teach_eHour, insert_sHour, insert_eHour);
     conflict_day_checker := compareDay(teachDay, insertDay);
 
     EXIT WHEN conflict_time_checker > 0 and conflict_day_checker > 0;

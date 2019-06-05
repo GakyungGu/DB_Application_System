@@ -2,7 +2,25 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head><title>수강신청 시스템 로그인</title> </head>
+<head><title>수강신청 시스템 로그인</title> 
+<link href="https://fonts.googleapis.com/css?family=Jua&display=swap" rel="stylesheet">	
+<style type="text/css">
+	body{
+		font-family: 'Jua', sans-serif;
+	}
+	.insert {
+		border-radius: 10px;
+		border: 1px solid #000000;
+		bgcolor: #cdcdcd;	
+	}
+	table {
+		border-collapse:collapse;
+	}
+	td {
+		border: 1px solid #cdcdcd;
+	}
+</style>
+</head>
 <body>
 <table width="75%" align="center" bgcolor="#FFFF99" border>
 <tr> <td><div align="center">아이디와 패스워드를 입력하세요 </div></td></table>
