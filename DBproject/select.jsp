@@ -6,33 +6,15 @@
 <meta charset="UTF-8">
 <title>수강신청 조회</title>
 <%
-/*학기 별로 검색 추가*/
 	String dbdriver = "oracle.jdbc.driver.OracleDriver";
 	String dburl = "jdbc:oracle:thin:@localhost:1521:orcl";
-	String user = "db1616612";
-	String passwd ="2997";
+	String user = "db1614465";
+	String passwd ="wlql77";
 	String mySQL = null;
 	Connection myConn = null;
 	Statement stmt = null;
 	CallableStatement cstmt = null, cstmt2 = null;
-%>
-<link href="https://fonts.googleapis.com/css?family=Jua&display=swap" rel="stylesheet">	
-<style type="text/css">
-	body{
-		font-family: 'Jua', sans-serif;
-	}
-	.insert {
-		border-radius: 10px;
-		border: 1px solid #000000;
-		bgcolor: #cdcdcd;	
-	}
-	table {
-		border-collapse:collapse;
-	}
-	td {
-		border: 1px solid #cdcdcd;
-	}
-</style>	
+%>	
 </head>
 <body>
 <%@include file="top.jsp" %>
@@ -67,7 +49,7 @@
 			System.out.println("section 1 error");
 			e1.printStackTrace();
 		}
-		if (stu_mode) {
+		if (stu_mode) { /*student mode*/
 			%>
 			<table id = "s_select" width="75%" align="center" bgcolor="#FFFFFF" border>
 			<tr>
@@ -125,8 +107,8 @@
 				}	
 				%>
 				<%//시간표 생성 %>
-				<table width="75%" height="100%" align="center" style="margin-top:10px" border>
-				<colgroup width="10px"></colgroup>
+				<table width="520px" height="100%" align="center" style="margin-top:10px">
+				<colgroup width="20px"></colgroup>
 				<colgroup width="100px"></colgroup>
 				<colgroup width="100px"></colgroup>
 				<colgroup width="100px"></colgroup>
@@ -140,18 +122,21 @@
 				<th>목</th>
 				<th>금</th>
 				</tr>
-
 				<%
 				int table_day = 0;
 				int s_time = 0, e_time = 0;
+				int s_min = 0, e_min = 0;
 				int rowspan = 0;
 				String table_time = null;
 				String table_cname = null;
 				String table_room = null;
 				String str = null;
-				String[][] table_data= new String[10][5];
-				int [] time = {9, 10, 11, 12, 1, 2, 3, 4, 5, 6};
-				boolean[][] isRowSpanned = new boolean[10][5];
+				String[][] table_data= new String[40][5];
+				int [] time = new int[10];
+				boolean[][] isRowSpanned = new boolean[40][5];
+				for (int i = 0; i < 10; i++){
+					time[i] = 9 + i;
+				}
 				try {
 					mySQL = "select c.c_name, t.t_shour, t.t_ehour, t.t_day, t.t_room from course c, teach t where c.c_id=t.c_id and c.c_no=t.c_no and (t.c_id, t.c_no, t.t_year, t.t_sem) in (select c_id, c_no, e_year, e_sem from enroll where s_id='" + session_id +"') ";
 					myResultSet = stmt.executeQuery(mySQL);
@@ -159,7 +144,7 @@
 					e3.printStackTrace();
 				}
 				finally {
-					int row = 0, column = 0;
+					int row = 0, erow = 0, column = 0;
 					while(myResultSet.next()) {						
 						table_day = Integer.parseInt(myResultSet.getString("t_day"));
 						s_time = Integer.parseInt(myResultSet.getString("t_shour"));
@@ -167,12 +152,44 @@
 						table_cname = myResultSet.getString("c_name");
 						table_room = myResultSet.getString("t_room");
 						str = table_cname + "<br>" + table_room;
+						s_min = s_time%100; e_min = e_time%100;
 						s_time = s_time / 100; e_time = e_time / 100;
-						row = s_time - 9; rowspan = e_time - s_time;
+						row = 4*(s_time - 9); 
+						erow = 4*(e_time - 9)-1;
+						
+						System.out.println("****"+s_min);
+						
+						
+						if ((8 <= s_min) && (s_min < 23)){
+							row += 1;
+						}
+						else if ((23 <= s_min) && (s_min < 38)){
+							row += 2;
+						}
+						else if ((38 <= s_min) && (s_min < 53)){
+							row += 3;
+						}
+						else if (s_min >= 53){
+							row += 4;
+						}
+						if ((8 <= e_min) && (e_min < 23)){
+							erow += 1;
+						}
+						else if ((23 <= e_min) && (e_min < 38)){
+							erow += 2;
+						}
+						else if ((38 <= e_min) && (e_min < 53)){
+							erow += 3;
+						}
+						else if (e_min >= 53){
+							erow += 4;
+						}
+						
 						switch(table_day) {
 						case 0 : 
 							column = 0;
-							table_data[row][0] = str; break;
+							table_data[row][0] = str;
+							break;
 						case 1:
 							column = 1;
 							table_data[row][1] = str; break;
@@ -201,24 +218,29 @@
 							table_data[row][4] = str;
 							break;
 						}
-						for (int i = 1, r = row+1; i < rowspan; r++, i++) {
+						
+						for (int r = row+1; r < erow+1; r++) {
 							isRowSpanned[r][column] = true;
 							if (table_day >= 5) {
 								isRowSpanned[r][column+2] = true;
 							}
 						}
 					}
-				}
+				}	
+				
 				rowspan = 1;
 				String bgcolor="#FFFFFF";
 				int pass = 0;
-				for (int i = 0; i < 10; i++) {
-					out.println("<tr height=\"50px\">");
-					out.println("<td><div align=\"center\">" + time[i] +"</div></td>");
+				for (int i = 0; i < 40; i++) {
+					out.println("<tr height=\"20px\">");
+					if (i%4 == 0){
+						out.println("<td rowspan=\" " + 4 + "\"  style=\"border-top:1px solid Seashell;\"><div align=\"center\">" + time[i/4] +"</div></td>");
+					}
+					
 					for (int j = 0; j < 5; j++) {
 						if (table_data[i][j] != null) {
-							bgcolor = "#B0C4DE"; 
-							for (int k = i+1; k < 10; k++){
+							bgcolor = "#FFF5EE"; 
+							for (int k = i+1; k < 40; k++){
 								if (isRowSpanned[k][j])
 									rowspan++;
 								else
@@ -229,7 +251,10 @@
 							table_data[i][j] = "";
 						}
 						if (!isRowSpanned[i][j]) {
-							out.print("<td bgcolor=\" " +bgcolor+ " \" rowspan=\" " + rowspan + "\"><div align=\"center\">");
+							if (i%4 == 0)
+								out.print("<td bgcolor=\" " +bgcolor+ " \" rowspan=\" " + rowspan + "\" style=\"border-top:1px solid Seashell;\"><div align=\"center\">");
+							else
+								out.print("<td bgcolor=\" " +bgcolor+ " \" rowspan=\" " + rowspan + "\" ><div align=\"center\">");
 							out.print(table_data[i][j] + "</div></td>");
 						}
 						bgcolor = "#FFFFFF";
@@ -238,7 +263,6 @@
 					out.println("</tr>");					
 				}
 				%>
-
 				</table>
 				<%
 				cstmt.close();
@@ -311,7 +335,6 @@
 		}
 	}
 %>
-
 </table>
 </body>
 </html>
