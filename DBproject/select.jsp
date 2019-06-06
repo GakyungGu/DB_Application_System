@@ -108,7 +108,7 @@
 				%>
 				<%//시간표 생성 %>
 				<table width="520px" height="100%" align="center" style="margin-top:10px">
-				<colgroup width="20px"></colgroup>
+				<colgroup width="40px"></colgroup>
 				<colgroup width="100px"></colgroup>
 				<colgroup width="100px"></colgroup>
 				<colgroup width="100px"></colgroup>
@@ -135,7 +135,7 @@
 				int [] time = new int[10];
 				boolean[][] isRowSpanned = new boolean[40][5];
 				for (int i = 0; i < 10; i++){
-					time[i] = 9 + i;
+					time[i] = 9+i;
 				}
 				try {
 					mySQL = "select c.c_name, t.t_shour, t.t_ehour, t.t_day, t.t_room from course c, teach t where c.c_id=t.c_id and c.c_no=t.c_no and (t.c_id, t.c_no, t.t_year, t.t_sem) in (select c_id, c_no, e_year, e_sem from enroll where s_id='" + session_id +"') ";
@@ -156,9 +156,6 @@
 						s_time = s_time / 100; e_time = e_time / 100;
 						row = 4*(s_time - 9); 
 						erow = 4*(e_time - 9)-1;
-						
-						System.out.println("****"+s_min);
-						
 						
 						if ((8 <= s_min) && (s_min < 23)){
 							row += 1;
@@ -231,12 +228,15 @@
 				rowspan = 1;
 				String bgcolor="#FFFFFF";
 				int pass = 0;
+				out.println("<tr height=\"20px\">");
+				out.println("<td rowspan=\" " + 2 + "\"><div align=\"center\">" + time[0] + "시" + "</div></td>");
+				out.println("</tr>");	
 				for (int i = 0; i < 40; i++) {
 					out.println("<tr height=\"20px\">");
-					if (i%4 == 0){
-						out.println("<td rowspan=\" " + 4 + "\"  style=\"border-top:1px solid Seashell;\"><div align=\"center\">" + time[i/4] +"</div></td>");
-					}
-					
+					if (i%4 == 3)
+						out.println("<td rowspan=\" " + 2 + "\"><div align=\"center\">" + time[(i/4)+1] + "시" +"</div></td>");
+					else if ((i%4 == 1) || (i%4 == 2) )
+						out.println("<td><div align=\"center\"></div></td>");
 					for (int j = 0; j < 5; j++) {
 						if (table_data[i][j] != null) {
 							bgcolor = "#FFF5EE"; 
@@ -326,7 +326,7 @@
 					out.println("<td><div align=\"center\">" + t_room + "</div></td>");
 					out.println("<td><div align=\"center\">" + t_max + "</div></td>");
 					out.println("</tr>");
-				}	
+				}
 				cstmt.close();
 				cstmt2.close();
 				stmt.close();
