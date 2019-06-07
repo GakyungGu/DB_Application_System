@@ -9,10 +9,11 @@ create or replace function createCourseId
     from teach
     order by c_id;
   BEGIN
+    courseId := 'C000';
     for teach_list in last_teach_cursor loop
       courseId := teach_list.c_id;
     end loop;
-
+   
     select substr(courseId, 2, 3)
     into courseId
     from dual;
@@ -20,7 +21,7 @@ create or replace function createCourseId
     temp := TO_NUMBER(courseId);
     temp := temp + 1;
 
-    courseId := 'C' || TO_CHAR(temp);
+    courseId := 'C' || LPAD(TO_CHAR(temp), 3, '0');
     RETURN courseId;
   end;
   /

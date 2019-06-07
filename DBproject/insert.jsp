@@ -1,5 +1,5 @@
-    <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="java.sql.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+ pageEncoding="UTF-8" import="java.sql.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,6 +7,11 @@
 <title>수강신청</title>
 <link href="https://fonts.googleapis.com/css?family=Jua&display=swap" rel="stylesheet">	
 <style type="text/css">
+	.table-wrapper {
+		height: 100px;
+		overflow: auto;
+		margin-top: 10px;
+	}
 	body{
 		font-family: 'Jua', sans-serif;
 	}
@@ -166,18 +171,25 @@
 }else { /*professor mode*/
 	if (session_id != null) {
 		ResultSet pResultSet = null;
+		String add_Name = null;
 		%>
+		<div class='table-wrapper'>
 		<table id = "courseTable" width="100%" align="center" border>
+		<form method="post">
+		<thead>
 		<tr>
-		<td><div align="center">과목 id</div></td>
-		<td><div align="center">학점</div></td>
-		<td><div align="center">학기</div></td>
-		<td><div align="center">과목 이름</div></td>
-		<td><div align="center">요일 및 시간</div></td>
-		<td><div align="center">담당 교수</div></td>
-		<td><div align="center">강의실</div></td>
-		<td><div align="center">정원</div></td>
+		<th>과목 id</th>
+		<th>학점</th>
+		<th>학기</th>
+		<th>과목 이름</th>
+		<th>요일 및 시간</th>
+		<th>담당 교수</th>
+		<th>강의실</th>
+		<th>정원</th>
+		<th>분반 추가</th>
 		</tr>
+		</thead>
+		<tbody>
 		<%
 		try {
 			Class.forName(dbdriver);
@@ -226,7 +238,9 @@
 				out.println("<td><div align=\"center\">" + profName + "</div></td>");
 				out.println("<td><div align=\"center\">" + t_room + "</div></td>");
 				out.println("<td><div align=\"center\">" + t_max + "</div></td>");
-%>				
+//				<td><div align="center"><input type="submit" value="추가" onClick="setValue()"></div></td>
+%>		
+				<td><div align="center"><a href="pop_up.jsp?id=<%=session_id%>&c_id=<%=courseID%>">추가</a></div>
 				</tr>
 <%
 			}	
@@ -235,9 +249,12 @@
 			myConn.close();
 		}
 	%>	
+	</tbody>
+	</form>
 	</table>
+	</div>
 	<table id=newCourseTable align="center" bgcolor="#FFFFFF" border>
-	<form method="post" action="insert_verify.jsp?mode=<%=stu_mode%>&id=<%=session_id%>">
+	<form method="post" action="insert_verify.jsp?mode=<%=stu_mode%>&id=<%=session_id%>&add=false">
 	<tr>
 	<td><div align="center">과목 이름</div></td>
 	<td><div align="center">분반</div></td>

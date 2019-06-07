@@ -8,6 +8,7 @@ IS
   too_many_courses EXCEPTION;
   too_many_students EXCEPTION;
   duplicate_time EXCEPTION;
+  duplicate_courses EXCEPTION;
   nYear NUMBER;
   nSemester NUMBER;
   nSumCourseUnit NUMBER;
@@ -56,6 +57,15 @@ DBMS_OUTPUT.put_line(sStudentId || '님이 과목번호 ' || sCourseId || ', 분
 
   IF (nCnt > 0) THEN
      RAISE too_many_courses;
+  END IF;
+
+  SELECT COUNT(*)
+  INTO nCnt
+  FROM enroll e, course c
+  WHERE e.c_id=c.c_id and e.c_no=c.c_no and e.s_id=sStudentId and e.c_no != nCourseIdNo and c.c_name in (select c_name from course where c_id=sCourseId);
+
+  IF (nCnt > 0) THEN
+  RAISE duplicate_courses;
   END IF;
 
   SELECT t_max
@@ -111,6 +121,8 @@ DBMS_OUTPUT.put_line(sStudentId || '님이 과목번호 ' || sCourseId || ', 분
       result := '수강신청 인원이 초과되어 등록이 불가능합니다';
     WHEN duplicate_time THEN
       result := '이미 등록된 과목과 시간이 중복됩니다.';
+    WHEN duplicate_courses THEN
+      result := '이미 다른 분반의 강의를 신청하였습니다.';
     WHEN no_data_found THEN
       result := '이번 학기 과목이 아닙니다.';
     WHEN OTHERS THEN

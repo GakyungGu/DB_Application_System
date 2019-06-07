@@ -82,8 +82,16 @@ BEGIN
   END IF;
   DBMS_OUTPUT.put_line('#2' || conflict_time_checker || ' | ' || conflict_day_checker);
 
-  nCourseId := createCourseId();
+  SELECT count(*)
+  INTO nCnt
+  FROM course;
 
+ IF (nCnt > 0) THEN
+  nCourseId := createCourseId();
+ ELSE
+  nCourseId := 'C000'; 
+ END IF;
+ 
   INSERT INTO course(c_id, c_no, c_name, c_credit) VALUES(nCourseId, courseNo, courseName, courseCredit);
   INSERT INTO teach(c_id, c_no, t_year, t_sem, p_id, t_shour, t_ehour, t_day, t_room, t_max)
   VALUES(nCourseId, courseNo, nYear, nSemester, professorID, teach_sHour, teach_eHour, teachDay, courseRoom, courseMax);

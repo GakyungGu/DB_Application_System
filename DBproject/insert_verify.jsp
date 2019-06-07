@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="java.sql.*" %>
+    pageEncoding="UTF-8" import="java.sql.*"  import="java.net.URLDecoder" %>
 <meta charset="UTF-8">
 <%
 	String dbdriver = "oracle.jdbc.driver.OracleDriver";
@@ -14,7 +14,6 @@
 	String userID = request.getParameter("id");
 	String userMode = request.getParameter("mode");
 	boolean isSucceed = false;
-	System.out.println(userMode);
 	try {
 		Class.forName(dbdriver);
 		myConn = DriverManager.getConnection(dburl, user, passwd);
@@ -58,8 +57,19 @@
 		}
 	}
 	else { /*professor mode*/
+		request.setCharacterEncoding("UTF-8");
 		String p_id = request.getParameter("id");
-		String c_name = new String(request.getParameter("courseName").getBytes("ISO-8859-1"),"UTF-8");
+		String add = request.getParameter("add");
+		System.out.println(add);
+		String c_name = null;
+		if (add.equals("true")) {
+			c_name = request.getParameter("courseName");
+			System.out.println(c_name);
+			c_name = URLDecoder.decode(c_name, "UTF-8");
+		}
+		else {
+			c_name = new String(request.getParameter("courseName"));
+		}
 		String[] c_day = request.getParameterValues("courseDay");
 		String sHour = request.getParameter("startHour");
 		String sMinute = request.getParameter("startMinute");
