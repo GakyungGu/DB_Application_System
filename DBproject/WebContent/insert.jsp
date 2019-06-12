@@ -244,11 +244,37 @@
 	<td><br><div align="center"><input type="text" name="courseName"></div></td>
 	<td><br><div align="center"><input type="text" style="width:20px" name="courseNo"></div></td>
 	<td><br><div align="center">
-	<input type="checkbox" name="courseDay" value="mon">월
-	<input type="checkbox" name="courseDay" value="tue">화
-	<input type="checkbox" name="courseDay" value="wed">수
-	<input type="checkbox" name="courseDay" value="thu">목
-	<input type="checkbox" name="courseDay" value="fri">금
+<script>
+function count_ck(obj){
+	var chkbox = document.getElementsByName("courseDay");
+	var chkCnt = 0;
+
+	for (var i=0; i<chkbox.length-1; i++){
+		if (chkbox[i].checked == true && chkbox[i+1].checked == true){
+			alert("연속된 날짜의 수업 등록은 불가능합니다.");
+			obj.checked = false;
+			return false;
+		}
+	}
+	
+	for(var i=0;i<chkbox.length; i++){
+		if(chkbox[i].checked){
+			chkCnt++;
+		}
+	}
+	
+	if(chkCnt>2){
+		alert("2일 이하로만 신청하실 수 있습니다.");
+		obj.checked = false;
+		return false;
+	}
+}
+</script>
+	<input type="checkbox" name="courseDay" onClick="count_ck(this);" value="mon">월
+	<input type="checkbox" name="courseDay" onClick="count_ck(this);" value="tue">화
+	<input type="checkbox" name="courseDay" onClick="count_ck(this);" value="wed">수
+	<input type="checkbox" name="courseDay" onClick="count_ck(this);" value="thu">목
+	<input type="checkbox" name="courseDay" onClick="count_ck(this);" value="fri">금
 	</div></td>
 	<td><br><div align="center">
 	<input type="text" style="width:20px" name="startHour" > :
