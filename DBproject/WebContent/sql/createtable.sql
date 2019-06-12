@@ -51,3 +51,10 @@ CREATE TABLE NOTICE(
 	n_cont VARCHAR2(1000),/*content*/
 	n_look NUMBER(10) /*b_hit*/
 );
+
+CREATE SEQUENCE n_no
+   START WITH 1
+   INCREMENT BY 1
+   MAXVALUE 9999999999;
+   
+commit;
