@@ -32,7 +32,7 @@ BEGIN
     RAISE_APPLICATION_ERROR(-20001, '이전과 동일한 비밀번호는 사용할 수 없습니다');
   WHEN underflow_length THEN
     RAISE_APPLICATION_ERROR(-20002, '비밀번호는 4자리 이상이어야 합니다.');
-  WHEN invaild_value THEN
+  WHEN invalid_value THEN
     RAISE_APPLICATION_ERROR(-20003, '비밀번호에 공란은 입력되지 않습니다.');
 
 END;
