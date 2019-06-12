@@ -2,27 +2,40 @@ create or replace function getStrDay(
   courseDay IN NUMBER)
   RETURN VARCHAR2
   IS
-  strDay VARCHAR2(10);
-BEGIN
-  IF (courseDay = 0) THEN
-    strDay := '¿ù';
-  ELSIF (courseDay = 1) THEN
-    strDay := 'È­';
-  ELSIF (courseDay = 2) THEN
-      strDay := '¼ö';
-  ELSIF (courseDay = 3) THEN
-      strDay := '¸ñ';
-  ELSIF (courseDay = 4) THEN
-      strDay := '±Ý';
-  ELSIF (courseDay = 5) THEN
-      strDay := '¿ù/¼ö';
-  ELSIF (courseDay = 6) THEN
-      strDay := 'È­/¸ñ';
-  ELSIF (courseDay = 7) THEN
-      strDay := '¼ö/±Ý';
-  ELSE
-      strDay := '¾Ë¼ö¾øÀ½';
-  END IF;
-  RETURN strDay;
+  strDay varchar2(10);
+  firstDay varchar2(10);
+  secondDay varchar2(10);
+BEGIN  
+  if (10 <= courseDay and courseDay < 20) then
+	firstDay := 'ì›”';
+  elsif (20 <= courseDay and courseDay < 30) then
+	firstDay := 'í™”';
+  elsif (30 <= courseDay and courseDay < 40) then
+	firstDay := 'ìˆ˜';
+  elsif (40 <= courseDay and courseDay < 50) then
+	firstDay := 'ëª©';
+  elsif (50 <= courseDay and courseDay < 60) then
+	firstDay := 'ê¸ˆ';
+  end if;
+  
+  if (MOD(courseDay, 10) = 1) then
+	secondDay := 'ì›”';
+  elsif (MOD(courseDay, 10) = 2) then
+	secondDay := 'í™”';
+  elsif (MOD(courseDay, 10) = 3) then
+	secondDay := 'ìˆ˜';
+  elsif (MOD(courseDay, 10) = 4) then
+	secondDay := 'ëª©';
+  elsif (MOD(courseDay, 10) = 5) then
+	secondDay := 'ê¸ˆ';
+  end if;
+  
+  if (courseDay < 10) then
+	strDay := secondDay;
+  else
+	strDay := CONCAT(firstDay, secondDay);
+  end if;
+  return strDay;
+	
 END;
 /
