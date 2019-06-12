@@ -269,10 +269,23 @@ function count_ck(obj){
 	<input type="checkbox" name="courseDay" onClick="count_ck(this);" value="fri">금
 	</div></td>
 	<td><br><div align="center">
-	<input type="text" style="width:20px" name="startHour" > :
-	<input type="text" style="width:30px" name="startMinute"> ~
-	<input type="text" style="width:20px" name="endHour"> :
-	<input type="text" style="width:30px" name="endMinute"></div></td>
+	<select name = "startHour" style="width:50px">
+	<%
+		for (int i = 9; i <= 18; i++) {
+			out.println("<option value=" + i +">" + i + "</option>");
+		}
+	%>
+	</select> 시
+	<input type="text" style="width:30px" name="startMinute"> 분~
+<!-- <input type="text" style="width:20px" name="endHour"> :  -->
+	<select name = "endHour" style="width:50px">
+	<%
+		for (int i = 9; i <= 18; i++) {
+			out.println("<option value=" + i +">" + i + "</option>");
+		}
+	%>
+	</select> 시
+	<input type="text" style="width:30px" name="endMinute">분</div></td>
 	<td><br><div align="center">
 	<select name="courseRoom" style="width:80px">
 	<option value="명신관">명신관</option>
