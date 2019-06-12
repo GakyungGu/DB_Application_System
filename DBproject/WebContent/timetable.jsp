@@ -115,9 +115,9 @@
 				String table_room = null;
 				String str = null;
 				String[][] table_data= new String[40][5];
-				int [] time = new int[10];
+				int [] time = new int[11];
 				boolean[][] isRowSpanned = new boolean[40][5];
-				for (int i = 0; i < 10; i++){
+				for (int i = 0; i < 11; i++){
 					time[i] = 9+i;
 				}
 				try {
