@@ -148,19 +148,19 @@
 			for (int i = 0; i < c_day.length; i++) {
 				switch(c_day[i]) {
 				case "mon":
-					myDay += '0';
-					break;
-				case "tue":
 					myDay += '1';
 					break;
-				case "wed":
+				case "tue":
 					myDay += '2';
 					break;
-				case "thu":
+				case "wed":
 					myDay += '3';
 					break;
-				case "fri":
+				case "thu":
 					myDay += '4';
+					break;
+				case "fri":
+					myDay += '5';
 					break;
 				}
 			}
