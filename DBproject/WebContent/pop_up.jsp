@@ -5,6 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>분반 추가</title>
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/layout.css" />
 <%
 	/* 분반 자동 생성  시 나머지 사항(장소, 요일, 시간) 입력 받아서 insert_verify.jsp로 넘기는 기능 */
 	String p_id = request.getParameter("id");
@@ -67,7 +69,7 @@
 	<input type="checkbox" name="courseDay" value="tue">화
 	<input type="checkbox" name="courseDay" value="wed">수
 	<input type="checkbox" name="courseDay" value="thu">목
-	<input type="checkbox" name="courseDay" value="fri">금
+	<input type="checkbox" name="courseDay" value="fri">금 <br><br>
 	</div></td>
 	</tr>
 	<tr>
@@ -76,7 +78,8 @@
 	<input type="text" style="width:20px" name="startHour" > :
 	<input type="text" style="width:30px" name="startMinute"> ~
 	<input type="text" style="width:20px" name="endHour"> :
-	<input type="text" style="width:30px" name="endMinute"></div></td>
+	<input type="text" style="width:30px" name="endMinute">	<br><br>	
+	</div></td>
 	</tr>
 	<tr>
 	<td><div align="center">장소</div></td>
@@ -89,11 +92,11 @@
 	<option value="과학관">과학관</option>
 	<option value="수련교수회관">수련교수회관</option>
 	</select>
-	<input type="text" style="width:40px" name="courseRoomNo">호</div></td>
+	<input type="text" style="width:40px" name="courseRoomNo">호<br><br></div></td>
 	</tr>
 	<tr>
 	<td><div align="center">인원</div></td>
-	<td><div align="center"><input type="text" style="width:40px" name="courseMax"></div></td>
+	<td><div align="center"><input type="text" style="width:40px" name="courseMax"><br><br></div></td>
 	</tr>
 	<tr>
 	<td colspan=2><div align="center"><input type="submit" value="추가">  <input type="reset" value="취소"></div></td>
