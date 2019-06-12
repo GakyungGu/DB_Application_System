@@ -249,14 +249,6 @@ function count_ck(obj){
 	var chkbox = document.getElementsByName("courseDay");
 	var chkCnt = 0;
 
-	for (var i=0; i<chkbox.length-1; i++){
-		if (chkbox[i].checked == true && chkbox[i+1].checked == true){
-			alert("연속된 날짜의 수업 등록은 불가능합니다.");
-			obj.checked = false;
-			return false;
-		}
-	}
-	
 	for(var i=0;i<chkbox.length; i++){
 		if(chkbox[i].checked){
 			chkCnt++;
