@@ -73,6 +73,7 @@
 	</div></td>
 	</tr>
 	<tr>
+   	<td><div align="center">시간</div></td>
    	<td><br><div align="center">
 	<select name = "startHour" style="width:50px">
 	<%
