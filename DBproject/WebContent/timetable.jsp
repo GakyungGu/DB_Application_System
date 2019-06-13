@@ -9,8 +9,8 @@
 <%
 	String dbdriver = "oracle.jdbc.driver.OracleDriver";
 	String dburl = "jdbc:oracle:thin:@localhost:1521:orcl";
-	String user = "db1616612";
-	String passwd ="2997";
+	String user = "db1614465";
+	String passwd ="wlql77";
 	String mySQL = null;
 	Connection myConn = null;
 	Statement stmt = null;
@@ -116,7 +116,7 @@
 				String str = null;
 				String[][] table_data= new String[40][5];
 				int [] time = new int[11];
-				boolean[][] isRowSpanned = new boolean[40][5];
+				boolean[][] isRowSpanned = new boolean[40][6];
 				for (int i = 0; i < 11; i++){
 					time[i] = 9+i;
 				}
@@ -236,7 +236,7 @@
 						
 						for (int r = row+1; r < erow+1; r++) {
 							isRowSpanned[r][column] = true;
-							if (table_day >= 5) {
+							if (table_day >= 10) {
 								isRowSpanned[r][column+2] = true;
 							}
 						}
@@ -362,8 +362,8 @@
 				String table_room = null;
 				String str = null;
 				String[][] table_data= new String[40][5];
-				int [] time = new int[10];
-				boolean[][] isRowSpanned = new boolean[40][5];
+				int [] time = new int[11];
+				boolean[][] isRowSpanned = new boolean[40][6];
 				for (int i = 0; i < 11; i++){
 					time[i] = 9+i;
 				}
@@ -483,7 +483,7 @@
 						
 						for (int r = row+1; r < erow+1; r++) {
 							isRowSpanned[r][column] = true;
-							if (table_day >= 5) {
+							if (table_day >= 10) {
 								isRowSpanned[r][column+2] = true;
 							}
 						}
