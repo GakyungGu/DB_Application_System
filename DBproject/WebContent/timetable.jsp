@@ -237,7 +237,7 @@
 						for (int r = row+1; r < erow+1; r++) {
 							isRowSpanned[r][column] = true;
 							if (table_day >= 10) {
-								isRowSpanned[r][column+2] = true;
+								isRowSpanned[r][table_day%10-1] = true;
 							}
 						}
 					}
@@ -484,7 +484,7 @@
 						for (int r = row+1; r < erow+1; r++) {
 							isRowSpanned[r][column] = true;
 							if (table_day >= 10) {
-								isRowSpanned[r][column+2] = true;
+								isRowSpanned[r][table_day%10-1] = true;
 							}
 						}
 					}
