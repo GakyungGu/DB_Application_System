@@ -12,7 +12,8 @@ create or replace function getStrHour(
     strEnd := TO_CHAR(endTime);
     IF (LENGTH(strStart) = 3) THEN
       strStart := '0' || strStart;
-    ELSIF (LENGTH(strEnd) = 3) THEN
+    END IF;
+    IF (LENGTH(strEnd) = 3) THEN
       strEnd := '0' || strEnd;
     END IF;
     strHour := SUBSTR(strStart, 1, 2) || ':';
