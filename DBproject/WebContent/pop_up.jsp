@@ -73,14 +73,24 @@
 	</div></td>
 	</tr>
 	<tr>
-	<td><div align="center">시간</div></td>
-	<td><div align="center">
-	<input type="text" style="width:20px" name="startHour" > :
-	<input type="text" style="width:30px" name="startMinute"> ~
-	<input type="text" style="width:20px" name="endHour"> :
-	<input type="text" style="width:30px" name="endMinute">	<br><br>	
-	</div></td>
-	</tr>
+   	<td><br><div align="center">
+	<select name = "startHour" style="width:50px">
+	<%
+		for (int i = 9; i <= 18; i++) {
+			out.println("<option value=" + i +">" + i + "</option>");
+		}
+	%>
+	</select> 시
+	<input type="text" style="width:30px" name="startMinute"> 분~
+	<select name = "endHour" style="width:50px">
+	<%
+		for (int i = 9; i <= 18; i++) {
+			out.println("<option value=" + i +">" + i + "</option>");
+		}
+	%>
+	</select> 시
+	<input type="text" style="width:30px" name="endMinute">분</div></td>
+   	</tr>
 	<tr>
 	<td><div align="center">장소</div></td>
 	<td><div align="center">
