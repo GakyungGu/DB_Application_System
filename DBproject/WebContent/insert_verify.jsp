@@ -126,6 +126,14 @@
 	         </script>
 	         <% 
 	      }
+	      else if ((Integer.parseInt(sMinute) >= 60) || ( Integer.parseInt(eMinute) >= 60)){
+			%>
+			<script>
+				alert("시간 입력이 잘못되었습니다.");
+				location.href="insert.jsp";
+			</script>
+			<% 
+		}
 		else if (c_room_no == null || c_room_no.equals("")) {
 			%>
 			<script>
