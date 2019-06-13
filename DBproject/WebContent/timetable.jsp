@@ -166,36 +166,71 @@
 						}
 						
 						switch(table_day) {
-						case 0 : 
+						case 1 : 
 							column = 0;
 							table_data[row][0] = str;
 							break;
-						case 1:
+						case 2:
 							column = 1;
 							table_data[row][1] = str; break;
-						case 2:
+						case 3:
 							column = 2;
 							table_data[row][2] = str; break;
-						case 3:
+						case 4:
 							column = 3;
 							table_data[row][3] =str; break;
-						case 4:
+						case 5:
 							column = 4;
 							table_data[row][4] = str; break;
-						case 5:
+						case 12:
+							column = 0;
+							table_data[row][0] = str;
+							table_data[row][1] = str;
+							break;
+						case 13:
 							column = 0;
 							table_data[row][0] = str;
 							table_data[row][2] = str;
 							break;
-						case 6:
+						case 14:
+							column = 0;
+							table_data[row][0] = str;
+							table_data[row][3] = str; 
+							break;
+						case 15:
+							column = 0;
+							table_data[row][0] = str;
+							table_data[row][4] = str; 
+							break;
+						case 23:
 							column = 1;
 							table_data[row][1] = str;
-							table_data[row][3] = str;
+							table_data[row][2] = str; 
 							break;
-						case 7:
+						case 24:
+							column = 1;
+							table_data[row][1] = str;
+							table_data[row][3] = str; 
+							break;
+						case 25:
+							column = 1;
+							table_data[row][1] = str;
+							table_data[row][4] = str; 
+							break;
+						case 34:
 							column = 2;
 							table_data[row][2] = str;
-							table_data[row][4] = str;
+							table_data[row][3] = str; 
+							break;
+						case 35:
+							column = 2;
+							table_data[row][2] = str;
+							table_data[row][4] = str; 
+							break;
+						case 45:
+							column = 3;
+							table_data[row][3] = str;
+							table_data[row][4] = str; 
 							break;
 						}
 						
@@ -329,7 +364,7 @@
 				String[][] table_data= new String[40][5];
 				int [] time = new int[10];
 				boolean[][] isRowSpanned = new boolean[40][5];
-				for (int i = 0; i < 10; i++){
+				for (int i = 0; i < 11; i++){
 					time[i] = 9+i;
 				}
 				try {
@@ -378,36 +413,71 @@
 						}
 						
 						switch(table_day) {
-						case 0 : 
+						case 1 : 
 							column = 0;
 							table_data[row][0] = str;
 							break;
-						case 1:
+						case 2:
 							column = 1;
 							table_data[row][1] = str; break;
-						case 2:
+						case 3:
 							column = 2;
 							table_data[row][2] = str; break;
-						case 3:
+						case 4:
 							column = 3;
 							table_data[row][3] =str; break;
-						case 4:
+						case 5:
 							column = 4;
 							table_data[row][4] = str; break;
-						case 5:
+						case 12:
+							column = 0;
+							table_data[row][0] = str;
+							table_data[row][1] = str;
+							break;
+						case 13:
 							column = 0;
 							table_data[row][0] = str;
 							table_data[row][2] = str;
 							break;
-						case 6:
+						case 14:
+							column = 0;
+							table_data[row][0] = str;
+							table_data[row][3] = str; 
+							break;
+						case 15:
+							column = 0;
+							table_data[row][0] = str;
+							table_data[row][4] = str; 
+							break;
+						case 23:
 							column = 1;
 							table_data[row][1] = str;
-							table_data[row][3] = str;
+							table_data[row][2] = str; 
 							break;
-						case 7:
+						case 24:
+							column = 1;
+							table_data[row][1] = str;
+							table_data[row][3] = str; 
+							break;
+						case 25:
+							column = 1;
+							table_data[row][1] = str;
+							table_data[row][4] = str; 
+							break;
+						case 34:
 							column = 2;
 							table_data[row][2] = str;
-							table_data[row][4] = str;
+							table_data[row][3] = str; 
+							break;
+						case 35:
+							column = 2;
+							table_data[row][2] = str;
+							table_data[row][4] = str; 
+							break;
+						case 45:
+							column = 3;
+							table_data[row][3] = str;
+							table_data[row][4] = str; 
 							break;
 						}
 						
